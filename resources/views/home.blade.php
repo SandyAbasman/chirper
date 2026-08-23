@@ -1,8 +1,5 @@
 <x-layout>
-    @if ($errors->any())
-    {{ dd($errors->all())}} 
-        
-    @endif
+  
     <x-slot:title>
         Home Feed
     </x-slot:title>
@@ -21,7 +18,10 @@
                     placeholder="What's on your mind?"
                     class="textarea textarea-bordered w-full resize-none @error('message') textarea-error @enderror"
                     rows="4"
+                     maxlength="255"
+                    required
                 
+
                 >{{ old('message') }}</textarea>
 
                 
