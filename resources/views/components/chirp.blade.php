@@ -26,8 +26,8 @@
      <span class="text-base-content/60">·</span>
      <span class="text-sm text-base-content/60">{{ $chirp->created_at->diffForHumans() }}</span>
 
-     //if update at is diff from created at add an edited text 
-     
+    
+
     @if ($chirp->updated_at->gt($chirp->created_at->addSeconds(5)))
         <span class="text-base-content/60">·</span>
         <span class="text-sm text-base-content/60 italic">edited</span>
