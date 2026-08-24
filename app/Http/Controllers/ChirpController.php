@@ -35,15 +35,25 @@ class ChirpController extends Controller
     {
          // Validate the request
     $validated = $request->validate([
-        'message' => 'required|string|max:255|min:5',
-    ]);
+        'message' => 'required|string|max:255|',
+
+                Rule::unique('chirps')->where(function ($query) use ($user) {
+            return $query->where('user_id', $user->id);
+            
+            })
+        ],
+        [
+            'message.required' => 'Please write something to post !',
+            'message.max' => 'post  must be 255 characters or less.',
+        ],
+    );
 
      \App\Models\Chirp::create([
         'message' => $validated['message'],
     ]);
 
         // Redirect back to the feed
-    return redirect('/')->with('success', 'Chirp created!');
+    return redirect('/')->with('success', 'Your post has been created !');
     }
 
     /**
@@ -57,24 +67,37 @@ class ChirpController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+   public function edit(Chirp $chirp)
     {
-        //
+        return view('chirps.edit', compact('chirp'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    public function update(Request $request, Chirp $chirp)
+{
+    // Validate
+    $validated = $request->validate([
+        'message' => 'required|string|max:255',
+    ],
+     [
+            'message.required' => 'Please write something to post !',
+            'message.max' => 'post  must be 255 characters or less.',
+        ],);
 
+    // Update
+    $chirp->update($validated);
+
+    return redirect('/')->with('success', 'Chirp updated!');
+}
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+  public function destroy(Chirp $chirp)
+{
+    $chirp->delete();
+
+    return redirect('/')->with('success', 'Chirp deleted!');
+}
 }
