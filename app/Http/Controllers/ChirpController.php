@@ -37,11 +37,7 @@ class ChirpController extends Controller
     $validated = $request->validate([
         'message' => 'required|string|max:255|',
 
-        // rate limit
-                Rule::unique('chirps')->where(function ($query) use ($user) {
-            return $query->where('user_id', $user->id);
-            
-            })
+     
         ],
         [
             'message.required' => 'Please write something to post !',
@@ -69,7 +65,7 @@ class ChirpController extends Controller
    public function edit(Chirp $chirp)
     {
             $this->authorize('update', $chirp);
-            
+
         return view('chirps.edit', compact('chirp'));
     }
 
