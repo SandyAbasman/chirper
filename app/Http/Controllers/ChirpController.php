@@ -37,6 +37,7 @@ class ChirpController extends Controller
     $validated = $request->validate([
         'message' => 'required|string|max:255|',
 
+        // rate limit
                 Rule::unique('chirps')->where(function ($query) use ($user) {
             return $query->where('user_id', $user->id);
             
@@ -47,10 +48,8 @@ class ChirpController extends Controller
             'message.max' => 'post  must be 255 characters or less.',
         ],
     );
-
-     \App\Models\Chirp::create([
-        'message' => $validated['message'],
-    ]);
+        //create post with  the authenticated user
+      auth()->user()->chirps()->create($validated);
 
         // Redirect back to the feed
     return redirect('/')->with('success', 'Your post has been created !');
@@ -69,6 +68,8 @@ class ChirpController extends Controller
      */
    public function edit(Chirp $chirp)
     {
+            $this->authorize('update', $chirp);
+            
         return view('chirps.edit', compact('chirp'));
     }
 
@@ -76,6 +77,9 @@ class ChirpController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Chirp $chirp)
+    {
+        // only authenticated users can update post
+        $this->authorize('update', $chirp);
 {
     // Validate
     $validated = $request->validate([
@@ -91,11 +95,15 @@ class ChirpController extends Controller
 
     return redirect('/')->with('success', 'Chirp updated!');
 }
+}
     /**
      * Remove the specified resource from storage.
      */
   public function destroy(Chirp $chirp)
 {
+
+    $this->authorize('delete', $chirp);
+    
     $chirp->delete();
 
     return redirect('/')->with('success', 'Chirp deleted!');

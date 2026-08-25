@@ -13,13 +13,8 @@
                     @method('PUT')
 
                     <div class="form-control w-full">
-                        <textarea
-                            name="message"
-                            class="textarea textarea-bordered w-full resize-none @error('message') textarea-error @enderror"
-                            rows="4"
-                            maxlength="255"
-                            required
-                        >{{ old('message', $chirp->message) }}</textarea>
+                        <textarea name="message" class="textarea textarea-bordered w-full resize-none @error('message') textarea-error @enderror"
+                            rows="4" maxlength="255" required>{{ old('message', $chirp->message) }}</textarea>
 
                         @error('message')
                             <div class="label">
