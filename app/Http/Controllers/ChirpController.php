@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Chirp;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ChirpController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -37,7 +39,11 @@ class ChirpController extends Controller
     $validated = $request->validate([
         'message' => 'required|string|max:255|',
 
-     
+        // // rate limit
+        //         Rule::unique('chirps')->where(function ($query) use ($user) {
+        //     return $query->where('user_id', $user->id);
+            
+        //     })
         ],
         [
             'message.required' => 'Please write something to post !',
@@ -65,7 +71,7 @@ class ChirpController extends Controller
    public function edit(Chirp $chirp)
     {
             $this->authorize('update', $chirp);
-
+            
         return view('chirps.edit', compact('chirp'));
     }
 
